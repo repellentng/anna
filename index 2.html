@@ -182,7 +182,7 @@ function dailyCore(day,date){
  add('wake-pray','Wake, hydrate & connect with God','Morning · flexible','faith','morning');
  add('oral-am','Morning hygiene & self-care','Morning','light','morning');
  add('bible-1','Bible reading and reflection','Morning','faith','morning');
- add('affirm-6','Read my identity declaration','Morning · My Compass','faith','morning',{optional:true});
+ add('identity-morning','Say today’s identity declaration','Morning · '+IDENTITY_DAYS[day].title,'faith','morning');
  if(sun){
   add('rest','Protected rest and worship','Sunday · no business quota','rest','growth');
   add('weekly-reflection','Gentle weekly reflection','Optional 10–15 minutes','rest','evening',{optional:true});
@@ -203,6 +203,7 @@ function dailyCore(day,date){
   add('german','German practice','10 minutes · optional','growth','growth',{optional:true});
  }
  add('reading','Read and nourish my mind','Evening · flexible','growth','evening',{optional:true});
+ add('identity-evening','Say today’s identity declaration','Night · '+IDENTITY_DAYS[day].title,'faith','evening');
  add('night-wind-down','Nighttime Wind-Down (Shower & Hygiene)','Evening · shower, body care and oral hygiene','rest','evening');
  add('gratitude-journal','Gratitude Journal','Evening · reflect on what went well','rest','evening');
  add('sleep','Rest and sleep','Protect sufficient sleep','rest','evening');
@@ -610,6 +611,43 @@ function renderVision(){const g=data.goals;const carPct=g.carTarget>0?Math.min(1
  ${financeCard('light','💡 Light Gallery finances',['Sale revenue','Product cost','Reinvestment transfer','Owner salary','Ads','Packaging','Shipping','Other expense'])}
  ${renderFinanceHistory()} ${renderBackupCard()}`;}
 
+const IDENTITY_DAYS = [
+  {
+    "name": "Spiritual Identity",
+    "title": "My Spiritual Identity",
+    "text": "I am a woman of God, a priest in my family, a carrier of the Holy Ghost, and a vessel through whom Christ is made known. My life points people toward Him. I am light, a revealer of identity, and a catalyst for meaningful intimacy with God and others. My assignment is to see His will fulfilled.\n\nI seek first God's Kingdom, His will and His way. My life is a reflection of my altar. My private devotion gives substance to my public life. I have the mind of Christ, I grow in His character, and I desire His results. I am kept under the shadow of the Most High. I speak with wisdom, faith and conviction. I walk in grace, favor, courage and peace."
+  },
+  {
+    "name": "Inner World",
+    "title": "My Inner World",
+    "text": "I know myself deeply. I recognize my emotions without surrendering authority to them. I do not rush to defend myself, prove my wealth, or seek approval. I trust my judgment, honor my convictions and communicate with clarity. I can say no without guilt. My heart is warm, but access to it is earned through trust. I guard my faith, mind and body. I function from rest, not desperation."
+  },
+  {
+    "name": "Femininity & Presence",
+    "title": "My Femininity & Presence",
+    "text": "I am a powerhouse who maintains her femininity. My authority does not erase my warmth. I am bubbly, joyful, kind, lighthearted and graceful. I laugh freely and do not make negativity my home. I care beautifully for my hygiene, health, body, mind and appearance. I am a fashion icon in my own expression. I enjoy travel, shopping, beauty and the fruit of my work. My body is worthy of respect, never sexual entitlement."
+  },
+  {
+    "name": "Mind & Character",
+    "title": "My Mind & Character",
+    "text": "I am well-read, intellectually curious, articulate and thoughtful. I acquire knowledge and apply it. I ask meaningful questions, listen carefully and speak with confidence. My word matters. My integrity matters. I have the courage to do what is necessary, even when uncomfortable. I do not merely admire potential; I develop it through discipline and action."
+  },
+  {
+    "name": "Purpose, Work & Abundance",
+    "title": "My Purpose, Work & Abundance",
+    "text": "I am a builder, a creator and a businesswoman. I create and multiply wealth by serving real needs and selling genuine value. In real estate, I serve intentional, financially capable clients with excellence and integrity. People buy through me, invest through me and recommend me because I cultivate trust, competence and meaningful relationships. The works of my hands are visible to those who need them. I believe in divine favor and speed, and I also prepare, follow up, negotiate and execute.\n\nI am financially comfortable and wise in stewardship. Money is a tool, not my identity. Like Joseph, I desire to elevate my family to a new level of financial abundance. I give generously, invest intelligently and enjoy beautiful experiences without needing to prove my worth. My success creates opportunities, lifts others and glorifies God."
+  },
+  {
+    "name": "Love & Relationships",
+    "title": "My Love & Relationships",
+    "text": "I am thoughtful, affectionate, wise and intentional in love. I desire a marriage with a man who honors God, respects my boundaries, cherishes me and delights in my happiness. I desire to be loved generously and consistently, and I bring emotional maturity, warmth, loyalty and care to that relationship. I do not confuse attention with commitment or promises with action. I love without abandoning myself."
+  },
+  {
+    "name": "The Life I Live",
+    "title": "The Life I Live",
+    "text": "My faith is visible in my obedience. My wisdom is visible in my decisions. My confidence is visible in my boundaries. My femininity is visible in my presence. My ambition is visible in my actions. My love is visible in how I treat people. I am not defined by one difficult day. I return to my convictions and keep becoming.\n\nI am a powerhouse, and I am at peace. I am a woman of substance, and I am full of light. I know whose I am. I know what I stand for. I know what I am building."
+  }
+];
 const COMPASS_DEFAULT={
  identity:`MY IDENTITY — THE WOMAN I AM. THE WOMAN I AM BECOMING.
 
@@ -665,7 +703,45 @@ I am a powerhouse, and I am at peace. I am a woman of substance, and I am full o
 };
 for(const [k,v] of Object.entries(COMPASS_DEFAULT)){if(data.compass[k]===undefined)data.compass[k]=v;}saveData();
 function saveCompass(k,v){data.compass[k]=v;saveData();}
-function renderCompass(){const labels=[['identity','✨ My Identity'],['why','🔥 My Why'],['priorities','🧭 My Priorities'],['values','💎 My Values'],['boundaries','🛡️ My Boundaries']];return `<div class="card card-gold"><p class="serif" style="font-size:23px;margin:0 0 8px">My Compass 🧭</p><p class="muted text-sm">A place to return to who you are, what matters, and how you choose to live.</p><p class="serif" style="line-height:1.6">${escapeHtml(data.compass.reminder||'I know whose I am. I know what I stand for. I know what I am building.')}</p><input class="input" placeholder="Remember Today — pin a short declaration" value="${escapeHtml(data.compass.reminder||'')}" oninput="saveCompass('reminder',this.value)"></div>${labels.map(([k,label])=>`<details class="card" ${k==='identity'?'open':''}><summary class="serif font-semibold" style="cursor:pointer">${label}</summary><p class="muted text-xs">Editable · saved on this device</p><textarea class="compass-text" rows="${k==='identity'?24:9}" oninput="saveCompass('${k}',this.value)">${escapeHtml(data.compass[k]??COMPASS_DEFAULT[k])}</textarea></details>`).join('')}`;}
+function identityText(i){return data.compass.identityDays?.[i]??IDENTITY_DAYS[i].text;}
+function saveIdentityDay(i,value){
+  data.compass.identityDays ||= {};
+  data.compass.identityDays[i]=value;
+  saveData();
+}
+function setIdentityDay(i){data.compass.selectedIdentityDay=i;saveData();render();}
+function identityDayPanel(){
+  const today=new Date().getDay();
+  const chosen=Number.isInteger(data.compass.selectedIdentityDay)?data.compass.selectedIdentityDay:today;
+  const i=(chosen>=0&&chosen<7)?chosen:today;
+  return `<div class="card">
+    <p class="serif" style="font-size:20px;margin:0 0 6px">✨ My Identity</p>
+    <p class="muted text-sm">Seven declarations, one for each day. Select a day to read or edit its statement.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:12px 0">
+    ${IDENTITY_DAYS.map((d,n)=>`<button type="button" class="icon-btn" style="width:auto;height:auto;min-height:44px;padding:8px;border-radius:10px;${i===n?'border:1px solid var(--gold, #bba46b);':''}" onclick="setIdentityDay(${n})">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][n]} · ${escapeHtml(d.name)}</button>`).join('')}
+    </div>
+    <p class="serif font-semibold" style="font-size:18px">${escapeHtml(IDENTITY_DAYS[i].title)}</p>
+    <p class="muted text-xs">Read this morning and tonight. You can edit this day's declaration below.</p>
+    <textarea class="compass-text" rows="18" oninput="saveIdentityDay(${i},this.value)">${escapeHtml(identityText(i))}</textarea>
+    </div>`;
+}
+function dailyIdentityReminder(){
+  const i=parseISO(selectedDate).getDay();
+  return `<div class="card card-gold" style="margin:10px 0">
+    <p class="serif font-semibold" style="font-size:17px;margin:0 0 6px">🌅 Morning & 🌙 Night · Today's identity</p>
+    <p class="text-sm" style="margin:0 0 7px"><strong>${escapeHtml(IDENTITY_DAYS[i].title)}</strong> — ${escapeHtml(DAY[i])}</p>
+    <details><summary class="text-sm" style="cursor:pointer">Read today's declaration</summary>
+      <div style="white-space:pre-wrap;line-height:1.75;margin-top:12px">${escapeHtml(identityText(i))}</div>
+    </details>
+    <p class="muted text-xs">Only today's declaration. Read it once in the morning and again at night.</p>
+  </div>`;
+}
+function renderCompass(){
+ const labels=[['why','🔥 My Why'],['priorities','🧭 My Priorities'],['values','💎 My Values'],['boundaries','🛡️ My Boundaries']];
+ return `<div class="card card-gold"><p class="serif" style="font-size:23px;margin:0 0 8px">My Compass 🧭</p><p class="muted text-sm">A place to return to who you are, what matters, and how you choose to live.</p><p class="serif" style="line-height:1.6">${escapeHtml(data.compass.reminder||'I know whose I am. I know what I stand for. I know what I am building.')}</p><input class="input" placeholder="Remember Today — pin a short declaration" value="${escapeHtml(data.compass.reminder||'')}" oninput="saveCompass('reminder',this.value)"></div>
+ ${identityDayPanel()}
+ ${labels.map(([k,label])=>`<details class="card"><summary class="serif font-semibold" style="cursor:pointer">${label}</summary><p class="muted text-xs">Editable · saved on this device</p><textarea class="compass-text" rows="9" oninput="saveCompass('${k}',this.value)">${escapeHtml(data.compass[k]??COMPASS_DEFAULT[k])}</textarea></details>`).join('')}`;
+}
 
 
 /* VIDEO OF THE WEEK — optional learning, independent of completion scores */
@@ -714,7 +790,7 @@ function renderNav(){
 function render(){
   const app=document.getElementById('app');
   let content='';
-  if(activeTab==='today') content=renderToday();
+  if(activeTab==='today') content=dailyIdentityReminder()+renderToday();
   else if(activeTab==='week') content=renderWeek();
   else if(activeTab==='growth') content=renderGrowth()+renderVideoOfWeek();
   else if(activeTab==='compass') content=renderCompass();
